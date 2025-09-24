@@ -173,67 +173,188 @@ class GlassRecipeCard extends StatelessWidget {
       showDragHandle: true,
       backgroundColor: Colors.transparent,
       builder: (_) => DraggableScrollableSheet(
-        initialChildSize: 0.75,
+        initialChildSize: 0.8,
         maxChildSize: 0.95,
-        minChildSize: 0.5,
+        minChildSize: 0.6,
         expand: false,
         builder: (_, controller) => Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: GlassContainer(
-            elevation: 6,
-            padding: const EdgeInsets.fromLTRB(20, 10, 20, 30),
+            elevation: 10,
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 36),
             child: ListView(
               controller: controller,
               children: [
-                Text(
-                  recipe.title,
-                  style: Theme.of(context).textTheme.headlineSmall
-                      ?.copyWith(fontWeight: FontWeight.w700),
-                ),
-                const SizedBox(height: 16),
                 Row(
                   children: [
-                    const Icon(Icons.schedule, size: 20),
-                    const SizedBox(width: 4),
-                    Text('${recipe.timeMinutes} min'),
-                    const SizedBox(width: 16),
-                    const Icon(Icons.group, size: 20),
-                    const SizedBox(width: 4),
-                    Text('${recipe.servings} servings'),
+                    Expanded(
+                      child: Text(
+                        recipe.title,
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(
+                              fontWeight: FontWeight.w800,
+                              height: 1.2,
+                            ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
-                const SizedBox(height: 24),
-                Text(
-                  'Ingredients',
-                  style: Theme.of(context).textTheme.titleMedium,
+                const SizedBox(height: 20),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.schedule, size: 18),
+                          const SizedBox(width: 6),
+                          Text(
+                            '${recipe.timeMinutes} min',
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Icons.group, size: 18),
+                          const SizedBox(width: 6),
+                          Text(
+                            '${recipe.servings} servings',
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 28),
+                Row(
+                  children: [
+                    const Icon(Icons.eco, size: 20),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Ingredients',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
                 ...recipe.ingredients.map(
-                  (e) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
+                  (e) => Container(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Text('•  '),
-                        Expanded(child: Text(e)),
+                        Container(
+                          width: 6,
+                          height: 6,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.6),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            e,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              height: 1.4,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(height: 24),
-                Text(
-                  'Steps',
-                  style: Theme.of(context).textTheme.titleMedium,
+                const SizedBox(height: 28),
+                Row(
+                  children: [
+                    const Icon(Icons.restaurant, size: 20),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Instructions',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
                 ...recipe.steps.asMap().entries.map(
-                  (e) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
+                  (e) => Container(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('${e.key + 1}. '),
-                        Expanded(child: Text(e.value)),
+                        Container(
+                          width: 28,
+                          height: 28,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          child: Center(
+                            child: Text(
+                              '${e.key + 1}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Text(
+                            e.value,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              height: 1.5,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),

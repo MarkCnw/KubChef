@@ -45,14 +45,17 @@ class _Root extends StatelessWidget {
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.camera_alt_outlined),
+            selectedIcon: Icon(Icons.camera_alt),
             label: 'Scan',
           ),
             NavigationDestination(
-            icon: Icon(Icons.menu_book_outlined),
+            icon: Icon(Icons.restaurant_menu_outlined),
+            selectedIcon: Icon(Icons.restaurant_menu),
             label: 'Recipes',
           ),
           NavigationDestination(
             icon: Icon(Icons.bookmark_outline),
+            selectedIcon: Icon(Icons.bookmark),
             label: 'Saved',
           ),
         ],
@@ -161,4 +164,4 @@ class _SavedPlaceholder extends StatelessWidget {
         ),
       ),
     );
-  }
+  }}

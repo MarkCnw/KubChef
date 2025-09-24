@@ -35,12 +35,24 @@ class AppTheme {
       navigationBarTheme: NavigationBarThemeData(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        indicatorColor: Colors.white.withOpacity(0.16),
+        indicatorColor: Colors.white.withOpacity(0.2),
         labelTextStyle: WidgetStateProperty.resolveWith(
-          (states) => TextStyle(
+          (states) => GoogleFonts.inter(
             fontWeight: states.contains(WidgetState.selected)
-                ? FontWeight.w600
-                : FontWeight.w400,
+                ? FontWeight.w700
+                : FontWeight.w500,
+            fontSize: 12,
+            color: Colors.white.withOpacity(
+              states.contains(WidgetState.selected) ? 1.0 : 0.7,
+            ),
+          ),
+        ),
+        iconTheme: WidgetStateProperty.resolveWith(
+          (states) => IconThemeData(
+            color: Colors.white.withOpacity(
+              states.contains(WidgetState.selected) ? 1.0 : 0.6,
+            ),
+            size: 24,
           ),
         ),
       ),
