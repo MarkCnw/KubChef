@@ -42,6 +42,8 @@ dependencies:
   google_fonts: ^6.3.1
   flutter_hooks: ^0.21.3+1
   rivership: ^0.3.0-dev.13
+  google_mlkit_object_detection: ^0.15.0
+  camera: ^0.11.2
 
 dev_dependencies:
   flutter_test:

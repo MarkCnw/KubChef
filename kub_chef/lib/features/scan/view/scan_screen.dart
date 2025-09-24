@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../../../common_widgets/loading_overlay.dart';
+import '../../../common_widgets/primary_button.dart';
 import '../provider/scan_provider.dart';
 import '../../suggestions/view/suggestions_screen.dart';
-import '../../../common_widgets/primary_button.dart';
 
 class ScanScreen extends StatelessWidget {
   const ScanScreen({super.key});
@@ -14,72 +14,91 @@ class ScanScreen extends StatelessWidget {
     final p = context.watch<ScanProvider>();
     return LoadingOverlay(
       loading: p.loading,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-        child: Column(
-          children: [
-            Expanded(
-              child: InkWell(
-                onTap: () => _showPicker(context),
-                borderRadius: BorderRadius.circular(24),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.surfaceVariant.withOpacity(0.35),
-                  ),
-                  child: p.image == null
-                      ? const Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.camera_alt, size: 48),
-                              SizedBox(height: 10),
-                              Text('Tap to Capture or Upload'),
-                            ],
-                          ),
-                        )
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(24),
-                          child: Image.file(
-                            p.image!,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          ),
-                        ),
-                ),
-              ),
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Scan')),
+        bottomNavigationBar: NavigationBar(
+          selectedIndex: 0,
+          destinations: const [
+            NavigationDestination(
+              icon: Icon(Icons.home_outlined),
+              label: 'Home',
             ),
-            const SizedBox(height: 18),
-            PrimaryButton(
-              label: 'Analyze',
-              onPressed: p.image == null
-                  ? null
-                  : () async {
-                      final res = await context
-                          .read<ScanProvider>()
-                          .analyze();
-                      if (res != null && context.mounted) {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => SuggestionsScreen(result: res),
-                          ),
-                        );
-                      }
-                    },
+            NavigationDestination(
+              icon: Icon(Icons.menu_book_outlined),
+              label: 'Recipes',
             ),
-            if (p.error != null) ...[
-              const SizedBox(height: 10),
-              Text(
-                p.error!,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.error,
-                ),
-              ),
-            ],
+            NavigationDestination(
+              icon: Icon(Icons.bookmark_border),
+              label: 'Saved',
+            ),
           ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Expanded(
+                child: InkWell(
+                  onTap: () => _showPicker(context),
+                  borderRadius: BorderRadius.circular(16),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: Theme.of(context).colorScheme.surfaceVariant,
+                    ),
+                    child: p.image == null
+                        ? const Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.camera_alt, size: 40),
+                                SizedBox(height: 8),
+                                Text('Take Photo or Upload'),
+                              ],
+                            ),
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.file(
+                              p.image!,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: double.infinity,
+                            ),
+                          ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              PrimaryButton(
+                label: 'Analyze',
+                onPressed: p.image == null
+                    ? null
+                    : () async {
+                        final res = await context
+                            .read<ScanProvider>()
+                            .analyze();
+                        if (res != null && context.mounted) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  SuggestionsScreen(result: res),
+                            ),
+                          );
+                        }
+                      },
+              ),
+              if (p.error != null) ...[
+                const SizedBox(height: 8),
+                Text(
+                  p.error!,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                ),
+              ],
+            ],
+          ),
         ),
       ),
     );
