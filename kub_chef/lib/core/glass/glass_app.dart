@@ -16,29 +16,40 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   @override
-  Size get preferredSize => const Size.fromHeight(66);
+  Size get preferredSize => const Size.fromHeight(76);
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       bottom: false,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
         child: GlassContainer(
+          elevation: 6,
           padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 12,
+            horizontal: 20,
+            vertical: 16,
           ),
           child: Row(
             children: [
               leading ??
-                  IconButton(
-                    icon: const Icon(Icons.menu),
-                    onPressed: () {
+                  GestureDetector(
+                    onTap: () {
                       Scaffold.maybeOf(context)?.openDrawer();
                     },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(
+                        Icons.menu,
+                        color: Colors.white,
+                      ),
+                    ),
                   ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 16),
               Expanded(
                 child: Text(
                   title,
@@ -46,14 +57,15 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ? TextAlign.center
                       : TextAlign.start,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
                   ),
                 ),
               ),
               if (actions != null)
                 ...actions!
               else
-                const SizedBox(width: 48),
+                const SizedBox(width: 40),
             ],
           ),
         ),

@@ -27,23 +27,36 @@ class GlassLoadingOverlay extends StatelessWidget {
                 duration: const Duration(milliseconds: 300),
                 child: Container(
                   alignment: Alignment.center,
-                  padding: const EdgeInsets.all(32),
+                  padding: const EdgeInsets.all(40),
                   child: GlassContainer(
-                    elevation: 8,
-                    padding: const EdgeInsets.all(28),
+                    elevation: 10,
+                    padding: const EdgeInsets.all(36),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: CircularProgressIndicator(strokeWidth: 5),
+                        Container(
+                          width: 70,
+                          height: 70,
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white.withOpacity(0.1),
+                          ),
+                          child: const CircularProgressIndicator(
+                            strokeWidth: 3,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
                         ),
                         if (message != null) ...[
-                          const SizedBox(height: 18),
+                          const SizedBox(height: 24),
                           Text(
                             message!,
                             textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
                           ),
                         ],
                       ],

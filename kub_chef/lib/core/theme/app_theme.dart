@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kub_chef/core/glass/glass_token.dart';
 
 
 
 class AppTheme {
-  static const _seed = Color(0xFF00C389);
+  static const _seed = Color(0xFF6B46C1); // Upgraded to premium purple
 
   static ThemeData light = _base(brightness: Brightness.light);
   static ThemeData dark = _base(brightness: Brightness.dark);
@@ -21,6 +22,10 @@ class AppTheme {
       brightness: brightness,
       scaffoldBackgroundColor: Colors.transparent,
       visualDensity: VisualDensity.adaptivePlatformDensity,
+      textTheme: GoogleFonts.interTextTheme().apply(
+        bodyColor: brightness == Brightness.dark ? Colors.white : Colors.black87,
+        displayColor: brightness == Brightness.dark ? Colors.white : Colors.black87,
+      ),
       appBarTheme: const AppBarTheme(
         elevation: 0,
         centerTitle: true,
@@ -43,27 +48,31 @@ class AppTheme {
         GlassTokens(
           backgroundGradient: const LinearGradient(
             colors: [
-              Color(0xFF0F2027),
-              Color(0xFF203A43),
-              Color(0xFF2C5364),
+              Color(0xFF0F0C29), // Deep purple-blue
+              Color(0xFF24243e), // Rich indigo
+              Color(0xFF302B63), // Elegant purple
+              Color(0xFF0F0C29), // Deep finish
             ],
+            stops: [0.0, 0.33, 0.66, 1.0],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           sheetGradient: LinearGradient(
             colors: [
-              Colors.white.withOpacity(0.15),
-              Colors.white.withOpacity(0.05),
+              Colors.white.withOpacity(0.25),
+              Colors.white.withOpacity(0.08),
+              Colors.white.withOpacity(0.03),
             ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            stops: const [0.0, 0.7, 1.0],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
           baseGlassColor: Colors.white,
-          blurSigma: 26,
-          borderOpacity: 0.30,
-          tintOpacity: 0.22,
-          defaultRadius: BorderRadius.circular(26),
-          elevatedRadius: BorderRadius.circular(34),
+          blurSigma: 32,
+          borderOpacity: 0.35,
+          tintOpacity: 0.18,
+          defaultRadius: BorderRadius.circular(28),
+          elevatedRadius: BorderRadius.circular(36),
         ),
       ],
     );

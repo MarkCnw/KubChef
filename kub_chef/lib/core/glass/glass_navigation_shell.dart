@@ -26,19 +26,31 @@ class _GlassNavigationShellState extends State<GlassNavigationShell> {
     return Scaffold(
       extendBody: true,
       body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 420),
-        switchInCurve: Curves.easeOutQuart,
+        duration: const Duration(milliseconds: 500),
+        switchInCurve: Curves.easeOutCubic,
         switchOutCurve: Curves.easeInCubic,
+        transitionBuilder: (child, animation) {
+          return SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(0.1, 0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: FadeTransition(
+              opacity: animation,
+              child: child,
+            ),
+          );
+        },
         child: KeyedSubtree(
           key: ValueKey(index),
           child: widget.pages[index],
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 18),
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
         child: GlassContainer(
           padding: EdgeInsets.zero,
-          elevation: 4,
+          elevation: 8,
           child: BottomNavigationBar(
             backgroundColor: Colors.transparent,
             currentIndex: index,

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import '../../../common_widgets/loading_overlay.dart';
+import '../../../core/glass/glass_loading_overlay.dart';
+import '../../../core/glass/glass_container.dart';
+import '../../../core/glass/primary_glass_button.dart';
 import '../provider/scan_provider.dart';
 import '../../suggestions/view/suggestions_screen.dart';
-import '../../../common_widgets/primary_button.dart';
 
 class ScanScreen extends StatelessWidget {
   const ScanScreen({super.key});
@@ -12,49 +13,89 @@ class ScanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = context.watch<ScanProvider>();
-    return LoadingOverlay(
+    return GlassLoadingOverlay(
       loading: p.loading,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
         child: Column(
           children: [
             Expanded(
-              child: InkWell(
+              child: GlassContainer(
+                interactive: true,
                 onTap: () => _showPicker(context),
-                borderRadius: BorderRadius.circular(24),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.surfaceVariant.withOpacity(0.35),
-                  ),
-                  child: p.image == null
-                      ? const Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.camera_alt, size: 48),
-                              SizedBox(height: 10),
-                              Text('Tap to Capture or Upload'),
-                            ],
-                          ),
-                        )
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(24),
-                          child: Image.file(
-                            p.image!,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          ),
+                elevation: p.image != null ? 6 : 2,
+                padding: EdgeInsets.zero,
+                child: p.image == null
+                    ? Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(24),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white.withOpacity(0.1),
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.3),
+                                  width: 2,
+                                ),
+                              ),
+                              child: const Icon(
+                                Icons.camera_alt_outlined,
+                                size: 56,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            Text(
+                              'Capture or Upload',
+                              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Take a photo of your ingredients',
+                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                color: Colors.white.withOpacity(0.8),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
-                ),
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(28),
+                        child: Stack(
+                          children: [
+                            Image.file(
+                              p.image!,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: double.infinity,
+                            ),
+                            Positioned(
+                              top: 16,
+                              right: 16,
+                              child: GlassContainer(
+                                padding: const EdgeInsets.all(8),
+                                child: const Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                  size: 20,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
               ),
             ),
-            const SizedBox(height: 18),
-            PrimaryButton(
-              label: 'Analyze',
+            const SizedBox(height: 24),
+            PrimaryGlassButton(
+              label: 'Analyze Ingredients',
+              icon: Icons.analytics_outlined,
               onPressed: p.image == null
                   ? null
                   : () async {
@@ -71,11 +112,25 @@ class ScanScreen extends StatelessWidget {
                     },
             ),
             if (p.error != null) ...[
-              const SizedBox(height: 10),
-              Text(
-                p.error!,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.error,
+              const SizedBox(height: 16),
+              GlassContainer(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        p.error!,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -90,27 +145,103 @@ class ScanScreen extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       showDragHandle: true,
-      builder: (_) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.photo_camera),
-              title: const Text('Take Photo'),
-              onTap: () {
-                Navigator.pop(context);
-                p.pickImage(source: ImageSource.camera);
-              },
+      backgroundColor: Colors.transparent,
+      builder: (_) => Padding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
+        child: GlassContainer(
+          elevation: 8,
+          child: SafeArea(
+            top: false,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Text(
+                    'Choose Photo Source',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: GlassContainer(
+                          interactive: true,
+                          onTap: () {
+                            Navigator.pop(context);
+                            p.pickImage(source: ImageSource.camera);
+                          },
+                          padding: const EdgeInsets.all(24),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white.withOpacity(0.1),
+                                ),
+                                child: const Icon(
+                                  Icons.photo_camera_outlined,
+                                  size: 32,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              const Text(
+                                'Camera',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: GlassContainer(
+                          interactive: true,
+                          onTap: () {
+                            Navigator.pop(context);
+                            p.pickImage(source: ImageSource.gallery);
+                          },
+                          padding: const EdgeInsets.all(24),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white.withOpacity(0.1),
+                                ),
+                                child: const Icon(
+                                  Icons.photo_library_outlined,
+                                  size: 32,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              const Text(
+                                'Gallery',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
             ),
-            ListTile(
-              leading: const Icon(Icons.photo_library_outlined),
-              title: const Text('Upload from Gallery'),
-              onTap: () {
-                Navigator.pop(context);
-                p.pickImage(source: ImageSource.gallery);
-              },
-            ),
-          ],
+          ),
         ),
       ),
     );

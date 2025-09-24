@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
 import 'core/glass/glass_background.dart';
 import 'core/glass/glass_navigation_shell.dart';
+import 'core/glass/glass_container.dart';
 import 'features/scan/provider/scan_provider.dart';
 import 'features/suggestions/provider/suggestions_provider.dart';
 import 'features/scan/view/scan_screen.dart';
@@ -70,9 +71,46 @@ class _RecipesPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Recipes Placeholder',
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Center(
+        child: GlassContainer(
+          elevation: 4,
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withOpacity(0.1),
+                ),
+                child: const Icon(
+                  Icons.menu_book,
+                  size: 40,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Recipes',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Coming Soon',
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: Colors.white.withOpacity(0.8),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -82,9 +120,45 @@ class _SavedPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Saved Placeholder',
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600)),
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Center(
+        child: GlassContainer(
+          elevation: 4,
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withOpacity(0.1),
+                ),
+                child: const Icon(
+                  Icons.bookmark,
+                  size: 40,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Saved Recipes',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Coming Soon',
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: Colors.white.withOpacity(0.8),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
-}
