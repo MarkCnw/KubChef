@@ -39,15 +39,19 @@ class _GlassNavigationShellState extends State<GlassNavigationShell> {
         child: GlassContainer(
           padding: EdgeInsets.zero,
           elevation: 4,
-          child: NavigationBar(
+          child: BottomNavigationBar(
             backgroundColor: Colors.transparent,
-            indicatorShape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(18),
-            ),
-            selectedIndex: index,
-            onDestinationSelected: (i) => setState(() => index = i),
-            destinations: widget.destinations,
-            height: 70,
+            currentIndex: index,
+            onTap: (i) => setState(() => index = i),
+            items: widget.destinations
+                .map(
+                  (d) => BottomNavigationBarItem(
+                    icon: d.icon,
+                    label: d.label,
+                  ),
+                )
+                .toList(),
+            type: BottomNavigationBarType.fixed,
           ),
         ),
       ),
