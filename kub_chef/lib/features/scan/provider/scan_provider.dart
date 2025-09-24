@@ -14,7 +14,9 @@ class ScanProvider extends ChangeNotifier {
   ScanResult? result;
 
   // เลือกหรือถ่ายภาพ
-  Future<void> pickImage({ImageSource source = ImageSource.gallery}) async {
+  Future<void> pickImage({
+    ImageSource source = ImageSource.gallery,
+  }) async {
     error = null;
     final picked = await _picker.pickImage(
       source: source,
@@ -64,7 +66,7 @@ class ScanProvider extends ChangeNotifier {
         })
         ..files.add(
           await http.MultipartFile.fromPath(
-            'file',                // ต้องตรงกับ field name ใน n8n
+            'file', // ต้องตรงกับ field name ใน n8n
             image!.path,
             filename: 'image.jpg',
             contentType: MediaType('image', 'jpeg'),
@@ -91,7 +93,8 @@ class ScanProvider extends ChangeNotifier {
           return null;
         }
       } else {
-        error = 'Upload failed: ${response.statusCode}\nResponse: $respStr';
+        error =
+            'Upload failed: ${response.statusCode}\nResponse: $respStr';
         return null;
       }
     } catch (e) {
