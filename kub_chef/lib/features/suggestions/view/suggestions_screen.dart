@@ -1,106 +1,80 @@
 import 'package:flutter/material.dart';
-import 'package:kub_chef/data/models/scan_result.dart';
-import 'package:kub_chef/features/recipe_detail/view/recipe_detail_screen.dart';
-import 'package:kub_chef/features/suggestions/widgets/ingredient_chip.dart';
-import 'package:kub_chef/features/suggestions/widgets/recipe_card.dart';
+import 'package:kub_chef/core/glass/glass_app.dart';
+import 'package:kub_chef/core/glass/glass_loading_overlay.dart';
+import 'package:kub_chef/features/suggestions/widgets/glass_recipe_card.dart';
+import 'package:provider/provider.dart';
+
+import '../../../core/glass/glass_container.dart';
+import '../../../data/models/scan_result.dart';
+import '../../suggestions/provider/suggestions_provider.dart';
 
 class SuggestionsScreen extends StatelessWidget {
   final ScanResult result;
-
   const SuggestionsScreen({super.key, required this.result});
 
   @override
   Widget build(BuildContext context) {
-    // Debug info
-    print('Ingredients count: ${result.ingredients.length}');
-    print('Recipes count: ${result.recipes.length}');
-    print(
-      'Ingredients: ${result.ingredients.map((e) => e.name).toList()}',
+    return ChangeNotifierProvider.value(
+      value: context.read<SuggestionsProvider>()..setResult(result),
+      child: const _SuggestionsBody(),
     );
-    print('Recipes: ${result.recipes.map((e) => e.title).toList()}');
+  }
+}
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Scan Results')),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          // Debug information
-          Container(
-            padding: const EdgeInsets.all(8),
-            color: Colors.yellow.shade100,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Debug Info:'),
-                Text('Ingredients: ${result.ingredients.length}'),
-                Text('Recipes: ${result.recipes.length}'),
-              ],
-            ),
-          ),
-          const SizedBox(height: 16),
+class _SuggestionsBody extends StatelessWidget {
+  const _SuggestionsBody();
 
-          // แสดง ingredients ถ้ามี
-          if (result.ingredients.isNotEmpty) ...[
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: result.ingredients
-                  .map((i) => IngredientChip(text: i.name))
-                  .toList(),
-            ),
-            const SizedBox(height: 16),
-          ] else ...[
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.orange.shade100,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text('No ingredients detected'),
-            ),
-            const SizedBox(height: 16),
-          ],
+  @override
+  Widget build(BuildContext context) {
+    final provider = context.watch<SuggestionsProvider>();
+    final res = provider.current;
 
-          Text(
-            'Recommended Dishes',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: 8),
-
-          // แสดง recipes ถ้ามี
-          if (result.recipes.isNotEmpty) ...[
-            for (final r in result.recipes)
-              RecipeCard(
-                recipe: r,
-                onView: () => Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => RecipeDetailScreen(recipe: r),
-                  ),
+    return GlassLoadingOverlay(
+      loading: false,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: const GlassAppBar(title: 'Suggestions'),
+        body: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 400),
+          child: res == null
+              ? const Center(child: Text('No data'))
+              : ListView(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
+                  children: [
+                    GlassContainer(
+                      elevation: 2,
+                      child: Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: res.ingredients
+                            .map(
+                              (i) => GlassContainer(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 6,
+                                ),
+                                child: Text(
+                                  i.name,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                    const SizedBox(height: 22),
+                    Text(
+                      'Recipes',
+                      style: Theme.of(context).textTheme.headlineSmall
+                          ?.copyWith(fontWeight: FontWeight.w600),
+                    ),
+                    const SizedBox(height: 12),
+                    ...res.recipes.map((r) => GlassRecipeCard(recipe: r)),
+                  ],
                 ),
-              ),
-          ] else ...[
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.orange.shade100,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                children: [
-                  Icon(Icons.restaurant, size: 48, color: Colors.orange),
-                  SizedBox(height: 8),
-                  Text('No recipes found'),
-                  SizedBox(height: 8),
-                  Text(
-                    'Try uploading a clearer food image or check if the AI service is working properly.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.grey[600]),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ],
+        ),
       ),
     );
   }
