@@ -28,7 +28,7 @@ class ScanProvider extends ChangeNotifier {
   }
 
   // ✅ เปลี่ยนให้ return ScanResult
-  Future<ScanResult?> analyze() async {
+  Future<ScanResult?> analyze() async { 
     if (image == null) return null;
     try {
       loading = true;
