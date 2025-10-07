@@ -15,7 +15,6 @@ class ScanScreen extends StatefulWidget {
 class _ScanScreenState extends State<ScanScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _pulseController;
-  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -47,7 +46,6 @@ class _ScanScreenState extends State<ScanScreen>
             IconButton(
               icon: const Icon(Icons.history),
               onPressed: () {
-                // TODO: Navigate to scan history
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Text('History feature coming soon!'),
@@ -57,32 +55,7 @@ class _ScanScreenState extends State<ScanScreen>
             ),
           ],
         ),
-        bottomNavigationBar: NavigationBar(
-          selectedIndex: _selectedIndex,
-          onDestinationSelected: (i) => setState(() => _selectedIndex = i),
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.camera_alt_outlined),
-              selectedIcon: Icon(Icons.camera_alt),
-              label: 'Scan',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.restaurant_menu_outlined),
-              selectedIcon: Icon(Icons.restaurant_menu),
-              label: 'Recipes',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.bookmark_border),
-              selectedIcon: Icon(Icons.bookmark),
-              label: 'Saved',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.person_outline),
-              selectedIcon: Icon(Icons.person),
-              label: 'Profile',
-            ),
-          ],
-        ),
+        // ✅ ลบ bottomNavigationBar ออก เพราะใช้ใน HomeScreen แล้ว
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(20),

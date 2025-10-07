@@ -13,19 +13,11 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen>
     with SingleTickerProviderStateMixin {
   bool _isSaved = false;
   late TabController _tabController;
-  final List<bool> _checkedIngredients = [];
-  final List<bool> _completedSteps = [];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    _checkedIngredients.addAll(
-      List.generate(widget.recipe.ingredients.length, (_) => false),
-    );
-    _completedSteps.addAll(
-      List.generate(widget.recipe.steps.length, (_) => false),
-    );
   }
 
   @override
@@ -41,57 +33,16 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen>
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          // Hero Image AppBar
+          // App Bar with actions
           SliverAppBar(
-            expandedHeight: 300,
             pinned: true,
-            stretch: true,
+            expandedHeight: 0,
             backgroundColor: colorScheme.surface,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  if (widget.recipe.imageUrl.isNotEmpty)
-                    Image.network(
-                      widget.recipe.imageUrl,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: colorScheme.surfaceVariant,
-                          child: Icon(
-                            Icons.restaurant,
-                            size: 80,
-                            color: colorScheme.onSurfaceVariant,
-                          ),
-                        );
-                      },
-                    )
-                  else
-                    Container(
-                      color: colorScheme.surfaceVariant,
-                      child: Icon(
-                        Icons.restaurant,
-                        size: 80,
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-
-                  // Gradient overlay
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          Colors.black.withOpacity(0.7),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pop(context),
             ),
+            title: Text(widget.recipe.title),
             actions: [
               IconButton(
                 icon: const Icon(Icons.share),
@@ -123,19 +74,20 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen>
             ],
           ),
 
-          // Title Section
+          // Title and Info Section
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Title
                   Text(
                     widget.recipe.title,
                     style: Theme.of(context).textTheme.headlineMedium
                         ?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
 
                   // Info cards
                   Row(
@@ -199,21 +151,6 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen>
           ),
         ],
       ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: FilledButton.icon(
-            onPressed: () {
-              _showCookingModeDialog(context);
-            },
-            icon: const Icon(Icons.play_arrow),
-            label: const Text('Start Cooking'),
-            style: FilledButton.styleFrom(
-              minimumSize: const Size.fromHeight(56),
-            ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -253,26 +190,38 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen>
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.only(bottom: 12),
-          child: CheckboxListTile(
-            value: _checkedIngredients[index],
-            onChanged: (val) {
-              setState(() => _checkedIngredients[index] = val ?? false);
-            },
-            title: Text(
-              widget.recipe.ingredients[index],
-              style: TextStyle(
-                decoration: _checkedIngredients[index]
-                    ? TextDecoration.lineThrough
-                    : null,
-                color: _checkedIngredients[index] ? Colors.grey : null,
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Theme.of(
+                context,
+              ).colorScheme.surfaceVariant.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: Theme.of(
+                  context,
+                ).colorScheme.outline.withOpacity(0.2),
               ),
             ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+            child: Row(
+              children: [
+                Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    widget.recipe.ingredients[index],
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ),
+              ],
             ),
-            tileColor: Theme.of(
-              context,
-            ).colorScheme.surfaceVariant.withOpacity(0.3),
           ),
         );
       },
@@ -286,72 +235,54 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen>
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.only(bottom: 16),
-          child: Card(
-            elevation: 0,
-            color: _completedSteps[index]
-                ? Theme.of(
-                    context,
-                  ).colorScheme.primaryContainer.withOpacity(0.5)
-                : Theme.of(
-                    context,
-                  ).colorScheme.surfaceVariant.withOpacity(0.3),
-            child: CheckboxListTile(
-              value: _completedSteps[index],
-              onChanged: (val) {
-                setState(() => _completedSteps[index] = val ?? false);
-              },
-              secondary: CircleAvatar(
-                backgroundColor: _completedSteps[index]
-                    ? Theme.of(context).colorScheme.primary
-                    : Theme.of(context).colorScheme.surfaceVariant,
-                foregroundColor: _completedSteps[index]
-                    ? Colors.white
-                    : Theme.of(context).colorScheme.onSurfaceVariant,
-                child: Text(
-                  '${index + 1}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Step number
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    '${index + 1}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
                 ),
               ),
-              title: Text(
-                widget.recipe.steps[index],
-                style: TextStyle(
-                  decoration: _completedSteps[index]
-                      ? TextDecoration.lineThrough
-                      : null,
-                  color: _completedSteps[index] ? Colors.grey : null,
+              const SizedBox(width: 16),
+              // Step description
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceVariant.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.outline.withOpacity(0.2),
+                    ),
+                  ),
+                  child: Text(
+                    widget.recipe.steps[index],
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
                 ),
               ),
-            ),
+            ],
           ),
         );
       },
-    );
-  }
-
-  void _showCookingModeDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Start Cooking Mode'),
-        content: const Text(
-          'This will guide you through the recipe step by step. Are you ready?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () {
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Cooking mode coming soon!')),
-              );
-            },
-            child: const Text('Start'),
-          ),
-        ],
-      ),
     );
   }
 }
