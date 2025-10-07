@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:kub_chef/features/home/view/home_screen.dart';
 import 'package:provider/provider.dart';
 import 'core/theme/app_theme.dart';
-import 'features/scan/view/scan_screen.dart';
 import 'features/scan/provider/scan_provider.dart';
 import 'features/suggestions/provider/suggestions_provider.dart';
+
 
 void main() {
   runApp(const App());
@@ -21,9 +22,11 @@ class App extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Ingredient Scanner',
+        title: 'Kub Chef',
         theme: AppTheme.light,
-        home: const ScanScreen(),
+        darkTheme: AppTheme.dark,
+        themeMode: ThemeMode.system,
+        home: const HomeScreen(),
       ),
     );
   }

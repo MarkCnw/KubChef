@@ -39,7 +39,7 @@ dependencies:
   http: ^1.5.0
   http_parser: ^4.1.2
   liquid_glass_renderer: ^0.1.1-dev.10
-  google_fonts: ^6.3.1
+  google_fonts: ^6.3.2
   flutter_hooks: ^0.21.3+1
   rivership: ^0.3.0-dev.13
   google_mlkit_object_detection: ^0.15.0
