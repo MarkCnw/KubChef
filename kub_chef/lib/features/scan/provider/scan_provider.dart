@@ -42,15 +42,14 @@ class ScanProvider extends ChangeNotifier {
       String baseUrl;
       if (kDebugMode) {
         if (Platform.isAndroid) {
-          baseUrl = 'http://172.16.138.39:5678'; // ✅ ใช้ IP คอม
+          baseUrl = 'http://10.0.2.2:5678';
         } else if (Platform.isIOS) {
-          baseUrl = 'http://172.16.138.39:5678';
+          baseUrl = 'http://localhost:5678';
         } else {
-          baseUrl = 'http://172.16.138.39:5678';
+          baseUrl = 'http://172.16.138.39:5678'; // สำหรับ desktop
         }
       } else {
-        baseUrl =
-            'http://172.16.138.39:5678'; // หรือ URL server จริงถ้า deploy
+        baseUrl = 'https://your-production-domain.com';
       }
 
       final uri = Uri.parse('$baseUrl/webhook/scan-to-recipe');
